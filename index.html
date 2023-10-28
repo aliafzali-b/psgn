@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="random strong password generator - Impenetrable and Unhackable">
+    <title>Strong password generator</title>
+
+</head>
+
+<body style="display: flex;justify-content: center;align-items: center;min-height: 100vh;flex-direction: column;">
+    <h2 id="length"></h2>
+    <h3 id="possibilities"></h3>
+    <script>
+        function generatePassword() {
+            var length = 20;//must be divideble by 4
+            var uppercaseCount = 5;
+            var lowercaseCount = 5;
+            var digitCount = 5;
+            var markCount = 5;
+            var uppercaseCharset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var lowercaseCharset = "abcdefghijklmnopqrstuvwxyz";
+            var digitCharset = "0123456789";
+            var markCharset = "!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            var password = "";
+
+            // Generate characters for each character set
+            for (var i = 0; i < uppercaseCount; i++) {
+                var randomIndex = Math.floor(Math.random() * uppercaseCharset.length);
+                password += uppercaseCharset[randomIndex];
+            }
+            for (var i = 0; i < lowercaseCount; i++) {
+                var randomIndex = Math.floor(Math.random() * lowercaseCharset.length);
+                password += lowercaseCharset[randomIndex];
+            }
+            for (var i = 0; i < digitCount; i++) {
+                var randomIndex = Math.floor(Math.random() * digitCharset.length);
+                password += digitCharset[randomIndex];
+            }
+            for (var i = 0; i < markCount; i++) {
+                var randomIndex = Math.floor(Math.random() * markCharset.length);
+                password += markCharset[randomIndex];
+            }
+
+            // Generate additional characters to meet length requirement
+            var remainingLength = length - (uppercaseCount + lowercaseCount + digitCount + markCount);
+            for (var i = 0; i < remainingLength; i++) {
+                var charsets = [uppercaseCharset, lowercaseCharset, digitCharset, markCharset];
+                var randomCharsetIndex = Math.floor(Math.random() * charsets.length);
+                var randomIndex = Math.floor(Math.random() * charsets[randomCharsetIndex].length);
+                password += charsets[randomCharsetIndex][randomIndex];
+            }
+
+            // Shuffle the password characters to make it more random
+            password = password.split('').sort(function () { return 0.5 - Math.random() }).join('');
+
+            return password;
+        }
+        function shuffleString(str) {
+            let arr = str.split(''); // Convert string to array
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1)); // Generate a random index
+                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap the elements
+            }
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1)); // Generate a random index
+                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap the elements
+            }
+            for (let i = arr.length - 1; i > 0; i--) {
+                let j = Math.floor(Math.random() * (i + 1)); // Generate a random index
+                [arr[i], arr[j]] = [arr[j], arr[i]]; // Swap the elements
+            }
+            return arr.join(''); // Convert the array back to a string
+        }
+        // Example usage:
+        setTimeout(() => {
+            for (let index = 0; index < 50; index++) {
+                var password = shuffleString(generatePassword());
+                const element = document.createElement('h4');
+                element.style.fontSize = '2em'
+                element.style.cursor = 'copy'
+                element.style.letterSpacing = '0.1em'
+                element.textContent = password
+                element.addEventListener('click', function () {
+                    // Create a temporary textarea element to copy the password
+                    const tempTextarea = document.createElement('textarea');
+                    tempTextarea.value = password;
+
+                    // Append the textarea to the document
+                    document.body.appendChild(tempTextarea);
+
+                    // Select the password text in the textarea
+                    tempTextarea.select();
+
+                    // Copy the selected text to the clipboard
+                    document.execCommand('copy');
+
+                    // Remove the temporary textarea
+                    document.body.removeChild(tempTextarea);
+
+                    // You can add a visual indication that the password has been copied if needed
+                    // For example, you can change the element's text or style temporarily
+                    element.textContent = 'Password Copied!';
+
+                    // After a short delay, reset the element to the original password
+                    setTimeout(function () {
+                        element.textContent = password;
+                    }, 2000); // 2000 milliseconds (2 seconds) in this example
+                });
+                document.body.appendChild(element);
+            }
+            document.querySelector("#length").innerHTML = `length is : ${password.length}`
+            document.querySelector("#possibilities").innerHTML = `possibilities is 91^20 : ${Math.pow(91, 20)}`
+        }, 500)
+    </script>
+</body>
+
+</html>
